@@ -32,15 +32,14 @@ public class PhysicCPUEngine : MonoBehaviour
     
     private Vector3 Gravity = new Vector3(0f,-9.8f,0f);
     
-    //drag or friction, reduce force when is colliding
+  
     private Vector3 minBounds = new Vector3();
     private Vector3 maxBounds = new Vector3();
 
+    private float radius;
 
-    private  void Awake()
-    {
-       
-    }
+
+    
 
 
     private void Start() {
@@ -68,6 +67,7 @@ public class PhysicCPUEngine : MonoBehaviour
             //instanciate the balls prefab
           
             GameObject newball = Instantiate(BallPrefab,newPos,Quaternion.identity);
+            radius = newball.GetComponent<SphereCollider>().radius;
             ballData.ballObject = newball;
             BallArray[i] = ballData;
 
@@ -79,90 +79,103 @@ public class PhysicCPUEngine : MonoBehaviour
   
     
     private void Update() {
-        int interations = 20;
+        int interations = 5;
         float newDelatTime = Time.deltaTime/interations;
 
         for(int i=0; i <interations; i++){
             //generate values
-            SimpleDynamics(newDelatTime);
+            SetInitialValues(newDelatTime);
             // collision detection
-            MovementBall(newDelatTime);
+            Collisions(newDelatTime);
             //move objects
+            MovementBall(newDelatTime);
         }
        //DynamicMovement();
         
     }
 
     
-
-    // public void DynamicMovement(){
-
-    //     for(int i=0; i<BallArray.Length;i++){
-    //         Ball current=BallArray[i];
-    //         //Force gravity = mass x gravity
-    //         current.force +=  current.mass * Gravity;            
-    //         // force/mass * time
-    //         current.velocity += current.force/ current.mass * Time.deltaTime;
-    //         current.position += current.velocity * Time.deltaTime;
-    //         current.ballObject.transform.position = current.position;
-            
-    //         // if(CheckWithinBounds(current)){
-    //         //     //S=So + v*t
-    //         //     current.position += current.velocity * Time.deltaTime;
-    //         //     current.ballObject.transform.position = current.position;
-    //         // }else{
-    //         //     current.velocity = -current.velocity;
-    //         //     current.position += current.velocity * Time.deltaTime;
-    //         //     current.ballObject.transform.position = current.position;
-    //         // }
-    //         // //reset
-    //         current.force = Vector3.zero;
-
-
-    //     }
-    // }
-
-
-
+    
     //first we are setting up the initial values
-    //the initial forces will be gravity, if the object is already on  the floor
-    //we can reduce the gravity
-    private void SimpleDynamics(float deltaTime)
-    {
-        for(int i=0; i<BallArray.Length; i++){  
-            
-           
+    //the initial forces will be gravity
+    private void SetInitialValues(float deltaTime){
+        
+        //start setting up the initial values, if it is colliding with the floor
+        //we dont want to include force
+        for(int i=0 ; i<BallArray.Length;i++){
             Ball current = BallArray[i];
-            //Force gravity = mass x gravity
+             //Force gravity = mass x gravity
             current.force +=  current.mass * Gravity;            
             // force/mass * time
             current.velocity += current.force/ current.mass * Time.deltaTime;
-            //BallList[i].transform.position = current.position;
-           // current.position += current.velocity * Time.deltaTime;
+            //decrement the velocty
             if(!CheckWithinBounds(current)){
-                
                 current.velocity = -current.velocity;
+                
+                if(current.position.y <= minBounds.y ||
+                current.position.y >= maxBounds.y){
                 current.velocity *= 0.98f;
+                    
+                }
             }
-            
-            current.force *= 0.7f;
             BallArray[i] = current;
-            // current.ballObject.transform.position = current.position;
-            // // //current.velocity *= 0.98f;
-            // current.force = Vector3.zero;
 
         }
     }
+    
+    //collisions
+    //collision in the wall
+    private void Collisions(float deltaTime){
+        for(int i=0; i <BallArray.Length-1; i++){
+            //first handle conllision with wall
+            Ball ball1 = BallArray[i];
+            for(int j=i+1; j<BallArray.Length; j++){
+                Ball ball2 = BallArray[j];
+                CheckCollisionWitOtherBalls(ball1, ball2,i,j);
+            }
+          BallArray[i] = ball1;
+        }
+        
+    }
 
+   
+
+ 
+
+    private void CheckCollisionWitOtherBalls(Ball ball1, Ball ball2, int i, int j)
+    {
+        Vector3 dist = ball1.position - ball2.position;
+        float distanceLenght =  Vector3.Distance(ball1.position, ball2.position);
+        //collision
+        if(distanceLenght < 2 *radius){
+            Vector3 normal = dist.normalized;
+            Vector3 relativeVelocity = ball2.velocity - ball1.velocity;
+
+            //impulse along the normal
+            float impulse = Vector3.Dot(relativeVelocity,normal);
+            ball1.velocity += impulse * normal;
+            ball2.velocity -= impulse * normal;
+            
+            //update the balls
+          
+            BallArray[j] = ball2;
+
+        }
+    }
+    
+   
+ 
 
     private void MovementBall(float deltaTime){
         for(int i=0; i<BallArray.Length; i++){
             Ball current = BallArray[i];
             current.position += current.velocity * deltaTime;
             //reset force
-            current.force = Vector3.zero;
             //change the position
+            
+            current.force = Vector3.zero;
             current.ballObject.transform.position = current.position;
+            
             BallArray[i] = current;
         }
     }
@@ -174,11 +187,6 @@ public class PhysicCPUEngine : MonoBehaviour
 
     private bool CheckWithinBounds(Ball ball){
         return BoxCollider.bounds.Contains(ball.position);
-    }
-
-    private bool WithinBoundsY(Ball ball){
-
-        return ball.position.y >=  minBounds.y || ball.position.y <= maxBounds.y;
     }
 
     private float GetRandomMass(){
