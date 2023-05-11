@@ -1,0 +1,95 @@
+
+#pragma kernel CollisionDetection
+
+#pragma kernel CollisionReponse
+
+#pragma kernel DyncamicValues
+
+#define GROUP_SIZEX 256
+
+
+
+
+struct Ball
+{
+	float3 position;
+	float3 force;
+	float3 velocity;
+	float4 color;
+    float mass;
+};
+RWStructuredBuffer<Ball> ballsBuffer;
+
+float deltaTime;
+int ballsCount;
+float radius;
+float3 maxBounds;
+float3 minBounds;
+
+
+
+inline bool isBallCollisionX(float posX)
+{
+	return posX >= minBounds.x && posX <=maxBounds.x;
+}
+
+inline bool isBallCollisionY(float posY)
+{
+	return posY >= minBounds.y && posY <=maxBounds.y;
+}
+
+inline bool isBallCollisionZ(float posZ)
+{
+	return posZ >= minBounds.z && posZ <=maxBounds.z;
+}
+
+
+
+[numthreads(GROUP_SIZEX,1,1)]
+void CollisionDetection (uint3 id : SV_DispatchThreadID)
+{
+	//first handle collision with the box collider
+	
+
+}
+
+
+
+[numthreads(GROUP_SIZEX,1,1)]
+void CollisionReponse (uint3 id : SV_DispatchThreadID)
+{
+
+}
+
+
+
+[numthreads(GROUP_SIZEX,1,1)]
+void DyncamicValues (uint3 id : SV_DispatchThreadID)
+{
+   	
+	float3 gravityConstant = float3(0,-9.8,0);
+	
+	Ball ball = ballsBuffer[id.x];
+
+	//simulating gravity
+    ball.force += gravityConstant *ball.mass; 
+
+	ball.velocity += ball.force / ball.mass * deltaTime; 
+	
+	float3 currentPos=  ball.position;
+	
+	bool isInsideBox = isBallCollisionX(currentPos.x) 
+	&& isBallCollisionY(currentPos.y) && isBallCollisionZ(currentPos.z);
+    
+    if(!isInsideBox){
+        ball.velocity = -ball.velocity;
+    }
+    
+    ball.position += ball.velocity * deltaTime; 
+    //ball.position += ball.force;
+    ball.force = float3(0,0,0);
+	
+	
+
+	ballsBuffer[id.x] = ball;
+}
