@@ -33,10 +33,10 @@ public class PhysicCPUEngine : MonoBehaviour
     private Vector3 Gravity = new Vector3(0f,-9.8f,0f);
     
   
-    private Vector3 minBounds = new Vector3();
-    private Vector3 maxBounds = new Vector3();
+    // private Vector3 minBounds = new Vector3();
+    // private Vector3 maxBounds = new Vector3();
 
-    private float radius;
+    public float radius = 0.15f;
 
 
     
@@ -67,7 +67,8 @@ public class PhysicCPUEngine : MonoBehaviour
             //instanciate the balls prefab
           
             GameObject newball = Instantiate(BallPrefab,newPos,Quaternion.identity);
-            radius = newball.GetComponent<SphereCollider>().radius;
+            //scale the sphere
+            newball.transform.localScale = Vector3.one * radius;
             ballData.ballObject = newball;
             BallArray[i] = ballData;
 
@@ -112,11 +113,11 @@ public class PhysicCPUEngine : MonoBehaviour
             if(!CheckWithinBounds(current)){
                 current.velocity = -current.velocity;
                 
-                if(current.position.y <= minBounds.y ||
-                current.position.y >= maxBounds.y){
+                // if(current.position.y <= minBounds.y ||
+                // current.position.y >= maxBounds.y){
                 current.velocity *= 0.98f;
                     
-                }
+                //}
             }
             BallArray[i] = current;
 

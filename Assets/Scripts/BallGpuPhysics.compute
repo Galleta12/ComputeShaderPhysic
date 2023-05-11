@@ -1,9 +1,9 @@
 
-#pragma kernel CollisionDetection
+#pragma kernel SetInitialValues
 
-#pragma kernel CollisionReponse
+#pragma kernel Collisions
 
-#pragma kernel DyncamicValues
+#pragma kernel MovementBall
 
 #define GROUP_SIZEX 256
 
@@ -46,12 +46,13 @@ inline bool isBallCollisionZ(float posZ)
 
 
 
-
+   //first we are setting up the initial values
+    //the initial forces will be gravity
 
 [numthreads(GROUP_SIZEX,1,1)]
-void CollisionDetection (uint3 id : SV_DispatchThreadID)
+void SetInitialValues (uint3 id : SV_DispatchThreadID)
 {
-	float3 gravityConstant = float3(0,-2,0);
+	float3 gravityConstant = float3(0,-9.8,0);
     //first handle collision with the box collider
     Ball ball = ballsBuffer[id.x];
     //simulating gravity
@@ -69,12 +70,17 @@ void CollisionDetection (uint3 id : SV_DispatchThreadID)
     {
         
 		ball.velocity = -ball.velocity;
-		ball.velocity *= 0.98;
+		// if(currentPos.y <= minBounds.y ||
+        // currentPos.y >= maxBounds.y){
+
+            ball.velocity *= 0.98;
+        //}
+        
 		
 		
     }
 
-	ball.force *= 0.7;
+	//ball.force *= 0.7;
 	ballsBuffer[id.x] = ball;
 	
 
@@ -83,7 +89,7 @@ void CollisionDetection (uint3 id : SV_DispatchThreadID)
 
 
 [numthreads(GROUP_SIZEX,1,1)]
-void CollisionReponse (uint3 id : SV_DispatchThreadID)
+void Collisions (uint3 id : SV_DispatchThreadID)
 {
     Ball ball1 = ballsBuffer[id.x];
 
@@ -120,7 +126,7 @@ void CollisionReponse (uint3 id : SV_DispatchThreadID)
 
 
 [numthreads(GROUP_SIZEX,1,1)]
-void DyncamicValues (uint3 id : SV_DispatchThreadID)
+void MovementBall (uint3 id : SV_DispatchThreadID)
 {
    	Ball ball = ballsBuffer[id.x];
     

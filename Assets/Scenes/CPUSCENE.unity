@@ -274,9 +274,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BallPrefab: {fileID: 1078212474107760941, guid: 287b158864fcea544a71291ead6d8ce4, type: 3}
-  ballsCount: 1000
+  ballsCount: 100
   maxMass: 5
   BoxCollider: {fileID: 279114286}
+  radius: 0.3
 --- !u!1 &277113552
 GameObject:
   m_ObjectHideFlags: 0
