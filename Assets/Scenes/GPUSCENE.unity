@@ -258,12 +258,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10caa5b8b5eec354295a2c2ffcfaf878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballsCount: 1000
-  maxMass: 5
-  BoxCollider: {fileID: 279114286}
   computeShader: {fileID: 7200000, guid: 179b7dc4bc8ddb74eb5f85fb6c113389, type: 3}
   ballMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   ballMaterial: {fileID: 2100000, guid: c84401262a8023f45887717d84e38482, type: 2}
+  ballsCount: 2
+  maxMass: 5
+  BoxCollider: {fileID: 279114286}
   radius: 0.15
 --- !u!4 &149988784
 Transform:

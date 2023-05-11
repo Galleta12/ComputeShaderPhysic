@@ -18,18 +18,22 @@ public class BallPhysicsEngine : MonoBehaviour
 
     };
 
-    public int ballsCount = 5;
-    public float maxMass = 5f;
-    
-    public BoxCollider BoxCollider;
+
     public ComputeShader computeShader;
 
     public Mesh ballMesh;
 
     public Material ballMaterial;
 
-    //radiuse of ball
+
+    public int ballsCount = 5;
+    public float maxMass = 5f;
+
+    public BoxCollider BoxCollider;
+
+      //radiuse of ball
     public float radius = 0.15f;
+
 
     private Ball[] BallArray;
 
@@ -54,6 +58,7 @@ public class BallPhysicsEngine : MonoBehaviour
     private MaterialPropertyBlock props;
 
 
+
     private void OnDestroy()
     {
         if (ballsBuffer != null)
@@ -66,13 +71,21 @@ public class BallPhysicsEngine : MonoBehaviour
             argsBuffer.Dispose();
         }
     }
+    
+    
+    
+
+    
+    
+    
+    
     private void Start() {
         
         
         //kernel for the collision
         kernelCollisions = computeShader.FindKernel("CollisionDetection");
         //kernel for the collisions reponse
-        kernelCollisions = computeShader.FindKernel("CollisionReponse");        
+        kernelCollisionsReponse = computeShader.FindKernel("CollisionReponse");        
         //kernel function for the dynamic (move the balls)
         kernelDynamicValues = computeShader.FindKernel("DyncamicValues");
         //getting the threads in the x axis
@@ -117,8 +130,16 @@ public class BallPhysicsEngine : MonoBehaviour
         // initialize ball buffer
         ballsBuffer = new ComputeBuffer(ballsCount, 14 * sizeof(float));
         ballsBuffer.SetData(BallArray);
-        //populate the data and buffers in the compute shader
+        
+        
+        computeShader.SetBuffer(kernelCollisions, "ballsBuffer", ballsBuffer);
+        
+        computeShader.SetBuffer(kernelCollisionsReponse, "ballsBuffer", ballsBuffer);
+        //populate the data and buffers in the compute shader for the dynamic
         computeShader.SetBuffer(kernelDynamicValues, "ballsBuffer", ballsBuffer);
+
+
+
         computeShader.SetInt("ballsCount", ballsCount);
         computeShader.SetFloat("radius", radius);
         Vector3 minBounds = BoxCollider.bounds.min;
@@ -150,7 +171,7 @@ public class BallPhysicsEngine : MonoBehaviour
             args[0] = (uint)ballMesh.GetIndexCount(0);
             //number of balls
             args[1] = (uint)ballsCount;
-            //this are for submeshes, we are not using submeshes on this project
+            // //this are for submeshes, we are not using submeshes on this project
             args[2] = (uint)ballMesh.GetIndexStart(0);
             args[3] = (uint)ballMesh.GetBaseVertex(0);
         }
