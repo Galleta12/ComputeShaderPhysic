@@ -6,7 +6,7 @@ There are three different implementations, the first one is running the physic i
 
 The second one, uses a compute shader.
 
-The third one uses a compute shader and a surface shader. Hence the redenring and the physics will be handled by the GPU.
+The third one uses a compute shader and a surface shader. Hence the rendering and the physics will be handled by the GPU.
 
 
 This project was done in the Unity Version Unity Beta Version 2022.2.0b5. You can clone this repository and open it with this Unity
