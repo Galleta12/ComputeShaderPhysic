@@ -17,3 +17,6 @@ the Assets folder. You can also change the settings of each scrip in the inspect
 CPU implementation in the CPUSCENE. The script that runs this implementation is PhysisCPUEngine.cs 
 Compute Shader implementation in the GPUBADSCENE. The scripts are PhysicsGPU.cs and BallGpuPhysics.compute
 Compute Shader and Surface Shader in the GPUSCENE. BallPhysicsEngine.cs and  BallGpuPhysics.compute
+
+
+![compute shader](https://github.com/Galleta12/ComputeShaderPhysic/assets/79543944/9d2da8f5-5ce0-4066-89b1-49a61af53d45)
