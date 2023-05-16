@@ -52,7 +52,7 @@ inline bool isBallCollisionZ(float posZ)
 [numthreads(GROUP_SIZEX,1,1)]
 void SetInitialValues (uint3 id : SV_DispatchThreadID)
 {
-	float3 gravityConstant = float3(0,-9.8,0);
+	float3 gravityConstant = float3(0,-3,0);
     //first handle collision with the box collider
     Ball ball = ballsBuffer[id.x];
     //simulating gravity
@@ -75,15 +75,10 @@ void SetInitialValues (uint3 id : SV_DispatchThreadID)
 
             ball.velocity *= 0.98;
         //}
-        
-		
-		
     }
 
-	//ball.force *= 0.7;
+	ball.force *= 0.7;
 	ballsBuffer[id.x] = ball;
-	
-
 }
 
 
@@ -92,33 +87,29 @@ void SetInitialValues (uint3 id : SV_DispatchThreadID)
 void Collisions (uint3 id : SV_DispatchThreadID)
 {
     Ball ball1 = ballsBuffer[id.x];
-
     for (int i = id.x + 1; i < ballsCount; i++)
     {
         Ball ball2 = ballsBuffer[i];
-
-        float3 dist = ball2.position - ball1.position;
+        float3 dist = ball1.position - ball2.position;
         float distLength = length(dist);
-
         if (distLength < 2 * radius) //collision
         {
             // Calculate the normal vector and the relative velocity
+            //this normal will be the tangential, the ball needs to travel along this vector
             float3 normal = normalize(dist);
             float3 relativeVelocity = ball2.velocity - ball1.velocity;
-
             // Calculate the impulse along the normal
-            float impulse = dot(relativeVelocity, normal);
-
+            //we project the vector hence we make the ball to along the noraml
+            float normalImpulse = dot(relativeVelocity, normal);
             // Update the velocities of both balls based on the collision
-            ball1.velocity += impulse * normal;
-            ball2.velocity -= impulse * normal;
-
-
+            ball1.velocity += normalImpulse * normal;
+            ball2.velocity -= normalImpulse * normal;
             // Update the balls in the buffer
             ballsBuffer[i] = ball2;
         }
     }
-
+    //decrement the force
+    ball1.force *=0.5;
     // Update the current ball in the buffer
     ballsBuffer[id.x] = ball1;
 }

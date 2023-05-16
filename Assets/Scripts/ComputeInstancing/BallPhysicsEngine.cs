@@ -59,6 +59,8 @@ public class BallPhysicsEngine : MonoBehaviour
 
 
 
+
+      // release the buffers when this script is no longer used.
     private void OnDestroy()
     {
         if (ballsBuffer != null)
@@ -159,8 +161,8 @@ public class BallPhysicsEngine : MonoBehaviour
         //setting up the material prop, assinging the unique id of this material
         props = new MaterialPropertyBlock();
         props.SetFloat("_UniqueID", Random.value);
-        //bounds vectors, 
-        bounds = new Bounds(Vector3.zero, Vector3.one * radius * 2);
+        //bounds vectors, bounds of the materials
+        bounds = new Bounds(Vector3.zero, Vector3.one * radius);
        
         //for the shader buffer
         //they need to have 5 arguments, this will be passed to the surface shader(vertex shader)
@@ -189,7 +191,7 @@ public class BallPhysicsEngine : MonoBehaviour
 
     private void Update()
     {
-        //this is for physics, the best is to calculate the update value several times per screen update
+        //this is for physics, the best is to calculate the update values several times per screen update
         //hence the ball move small amounts, hence the ball doesnt move fast 
         int iterations = 5;
         computeShader.SetFloat("deltaTime", Time.deltaTime/iterations);

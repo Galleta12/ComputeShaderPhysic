@@ -13,8 +13,6 @@ public class PhysicCPUEngine : MonoBehaviour
         public GameObject ballObject;
 
     };
-
-
     public GameObject BallPrefab;
 
      //varaible get from the manager
@@ -24,18 +22,10 @@ public class PhysicCPUEngine : MonoBehaviour
 
     public BoxCollider BoxCollider;
 
- 
     //array for the balls
     private Ball[] BallArray;
-    //list of balls position gameobject
-    //private List<GameObject> BallList = new List<GameObject>();
-    
-    private Vector3 Gravity = new Vector3(0f,-9.8f,0f);
-    
   
-    // private Vector3 minBounds = new Vector3();
-    // private Vector3 maxBounds = new Vector3();
-
+    private Vector3 Gravity = new Vector3(0f,-9.8f,0f);
     public float radius = 0.15f;
 
 
@@ -68,7 +58,7 @@ public class PhysicCPUEngine : MonoBehaviour
           
             GameObject newball = Instantiate(BallPrefab,newPos,Quaternion.identity);
             //scale the sphere
-            newball.transform.localScale = Vector3.one * radius;
+            newball.transform.localScale = Vector3.one * (radius* 2);
             ballData.ballObject = newball;
             BallArray[i] = ballData;
 
@@ -139,10 +129,6 @@ public class PhysicCPUEngine : MonoBehaviour
         
     }
 
-   
-
- 
-
     private void CheckCollisionWitOtherBalls(Ball ball1, Ball ball2, int i, int j)
     {
         Vector3 dist = ball1.position - ball2.position;
@@ -151,14 +137,11 @@ public class PhysicCPUEngine : MonoBehaviour
         if(distanceLenght < 2 *radius){
             Vector3 normal = dist.normalized;
             Vector3 relativeVelocity = ball2.velocity - ball1.velocity;
-
             //impulse along the normal
             float impulse = Vector3.Dot(relativeVelocity,normal);
             ball1.velocity += impulse * normal;
-            ball2.velocity -= impulse * normal;
-            
+            ball2.velocity -= impulse * normal;            
             //update the balls
-          
             BallArray[j] = ball2;
 
         }

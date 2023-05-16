@@ -222,8 +222,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75971556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.9993887, y: 0.4, z: -0.98}
-  m_LocalScale: {x: 3.6605, y: 3.6605, z: 3.6605}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -274,10 +274,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BallPrefab: {fileID: 1078212474107760941, guid: 287b158864fcea544a71291ead6d8ce4, type: 3}
-  ballsCount: 100
+  ballsCount: 1000
   maxMass: 5
   BoxCollider: {fileID: 279114286}
-  radius: 0.3
+  radius: 0.15
 --- !u!1 &277113552
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,8 +408,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 18.098825, y: 10.375057, z: 11.220055}
-  m_Center: {x: 7.24088, y: 4.6875286, z: -13.4201355}
+  m_Size: {x: 10.09135, y: 2.7309725, z: 9.945235}
+  m_Center: {x: -0.0027785301, y: 0.8654865, z: 0.062180996}
 --- !u!4 &279114287
 Transform:
   m_ObjectHideFlags: 0
@@ -418,7 +418,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279114285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.26, y: 1.38, z: -0.26}
+  m_LocalPosition: {x: -0.06, y: 0.55, z: -0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -509,8 +509,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326354200}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.09500139, y: -0.69598645, z: 0.09366188, w: 0.7055531}
+  m_LocalPosition: {x: 10.18129, y: 4.0364523, z: -0.14505376}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

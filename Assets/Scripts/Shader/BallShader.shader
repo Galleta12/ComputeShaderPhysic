@@ -52,17 +52,18 @@ Shader "Physics/BallShader" {
          #endif
 
  
-        //once per vetex of the mesh
+        //once per vertex of the mesh
          void vert(inout appdata_full v, out Input data)
         {
             UNITY_INITIALIZE_OUTPUT(Input, data);
             //move the balls 
             #ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
+                //scale ball
                 v.vertex.xyz *= _Radius;
                 v.vertex.xyz += _BallPosition;
             #endif
         }
-        //onece per instance
+        //once per instance
         void setup()
         {
             //populate the varaibles from the buffer

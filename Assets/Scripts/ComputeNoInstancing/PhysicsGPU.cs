@@ -13,18 +13,13 @@ public class PhysicsGPU : MonoBehaviour
          public Color color;
         public float mass;
 
-    
 
     };
 
     public GameObject BallPrefab;
     public ComputeShader computeShader;
 
-    public Mesh ballMesh;
-
-    public Material ballMaterial;
-
-
+  
     public int ballsCount = 5;
     public float maxMass = 5f;
 
@@ -50,7 +45,7 @@ public class PhysicsGPU : MonoBehaviour
     private int groupSizeX;
 
 
-
+    // release the buffer when this script is no longer used.
     private void OnDestroy()
     {
         if (ballsBuffer != null)
@@ -105,7 +100,7 @@ public class PhysicsGPU : MonoBehaviour
           
             GameObject newball = Instantiate(BallPrefab,newPos,Quaternion.identity);
             //scale the sphere
-            newball.transform.localScale = Vector3.one * radius;
+            newball.transform.localScale = Vector3.one * (radius*2);
 
             BallList.Add(newball);
 
